@@ -9,6 +9,8 @@ namespace eShopLegacyMVCCore
     public static class Extensions
     {
         public const string DataSettingsSectionName = "DataSettings";
+        public const string FileSettingsSectionName = "FileSettings";
+
         public static void AddCatalogServices(this IHostApplicationBuilder builder)
         {
             builder.Services.Configure<DataSettings>(builder.Configuration.GetSection(DataSettingsSectionName));
@@ -24,6 +26,12 @@ namespace eShopLegacyMVCCore
                 ?? string.Empty));
             builder.Services.AddScoped<CatalogDBInitializer>();
             builder.Services.AddSingleton<CatalogItemHiLoGenerator>();
+        }
+
+        public static void AddFileServices(this IHostApplicationBuilder builder)
+        {
+            builder.Services.Configure<FileSettings>(builder.Configuration.GetSection(FileSettingsSectionName));
+            builder.Services.AddSingleton<FileService>();
         }
     }
 }

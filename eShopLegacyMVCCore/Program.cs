@@ -6,8 +6,10 @@ builder.Services.AddSystemWebAdapters();
 
 // Add services to the container.
 builder.AddCatalogServices();
+builder.AddFileServices();
 builder.Services.Configure<MessageQueueSettings>(builder.Configuration.GetSection("MessageQueueSettings"));
 builder.Services.AddControllersWithViews();
+builder.Services.AddResponseCaching();
 
 // Add session-related services
 builder.Services.AddDistributedMemoryCache();
@@ -27,6 +29,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 app.UseSystemWebAdapters();
+app.UseResponseCaching();
 
 app.UseSession();
 
