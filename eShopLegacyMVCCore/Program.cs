@@ -1,15 +1,19 @@
 
+using eShopLegacyMVCCore;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSystemWebAdapters();
-builder.Services.AddHttpForwarder();
 
 // Add services to the container.
+var useMockData = bool.TryParse(builder.Configuration["UseMockData"], out bool parseOut) ? parseOut : false;
+builder.AddCatalogServices();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
+    app.UseExceptionHandler("/Error/Index");
     app.UseHsts();
 }
 
@@ -20,7 +24,14 @@ app.UseRouting();
 app.UseAuthorization();
 app.UseSystemWebAdapters();
 
-app.MapDefaultControllerRoute();
-app.MapForwarder("/{**catch-all}", app.Configuration["ProxyTo"]).Add(static builder => ((RouteEndpointBuilder)builder).Order = int.MaxValue);
+app.MapControllerRoute(
+    "Default",
+    "{controller=Catalog}/{action=Index}/{id?}"
+);
+
+app.MapControllerRoute(
+    "DefaultApi",
+    "api/{controller}/{id?}"
+);
 
 app.Run();
