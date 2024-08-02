@@ -1,13 +1,17 @@
-
 using eShopLegacyMVCCore;
+using eShopLegacyMVCCore.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSystemWebAdapters();
 
 // Add services to the container.
-var useMockData = bool.TryParse(builder.Configuration["UseMockData"], out bool parseOut) ? parseOut : false;
 builder.AddCatalogServices();
+builder.Services.Configure<MessageQueueSettings>(builder.Configuration.GetSection("MessageQueueSettings"));
 builder.Services.AddControllersWithViews();
+
+// Add session-related services
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -23,6 +27,8 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 app.UseSystemWebAdapters();
+
+app.UseSession();
 
 app.MapControllerRoute(
     "Default",

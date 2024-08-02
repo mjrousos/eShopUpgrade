@@ -1,7 +1,5 @@
 ﻿using eShopLegacyMVC.Models;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
 using eShopLegacyMVC.ViewModel;
 
 namespace eShopLegacyMVC.Services
