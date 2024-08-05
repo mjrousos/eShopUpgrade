@@ -1,5 +1,8 @@
+using eShopLegacyMVC.Models;
 using eShopLegacyMVCCore;
 using eShopLegacyMVCCore.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSystemWebAdapters();
@@ -15,6 +18,17 @@ builder.Services.AddResponseCaching();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
+// Identity-related services
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
+});
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+// Add bundling and minification services and configuration
 builder.Services.AddWebOptimizer(pipeline =>
 {
     pipeline.AddJavaScriptBundle("/bundles/jquery", "Scripts/jquery-*.js")

@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Globalization;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
-using System.Web.Hosting;
 
 namespace eShopLegacyMVC.Models.Infrastructure
 {
