@@ -15,6 +15,28 @@ builder.Services.AddResponseCaching();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
+builder.Services.AddWebOptimizer(pipeline =>
+{
+    pipeline.AddJavaScriptBundle("/bundles/jquery", "Scripts/jquery-*.js")
+        .UseContentRoot();
+
+    pipeline.AddJavaScriptBundle("/bundles/jqueryval", "Scripts/jquery.validate*")
+        .UseContentRoot();
+
+    pipeline.AddJavaScriptBundle("/bundles/modernizr", "Scripts/modernizr-*")
+        .UseContentRoot();
+
+    pipeline.AddJavaScriptBundle("/bundles/bootstrap", "Scripts/bootstrap.js", "Scripts/respond.js")
+        .UseContentRoot();
+
+    pipeline.AddCssBundle("/Content/css", 
+                          "Content/bootstrap.css",
+                          "Content/custom.css",
+                          "Content/base.css",
+                          "Content/site.css")
+        .UseContentRoot();
+});
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -24,6 +46,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseWebOptimizer();
 app.UseStaticFiles();
 
 app.UseRouting();
