@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\eShopLegacy.Common\eShopLegacy.Common.csproj" />
+	<ProjectReference Include="..\eShopLegacy.Utilities\eShopLegacy.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

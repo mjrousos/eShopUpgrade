@@ -70,6 +70,17 @@ app.UseResponseCaching();
 
 app.UseSession();
 
+// Session_Start
+app.Use(async (context, next) =>
+{
+    if (context.Session.IsAvailable && !context.Session.Keys.Contains("SessionStartTime"))
+    {
+        context.Session.SetString("SessionStartTime", DateTime.Now.ToString());
+    }
+
+    await next();
+});
+
 app.MapControllerRoute(
     "Default",
     "{controller=Catalog}/{action=Index}/{id?}"
