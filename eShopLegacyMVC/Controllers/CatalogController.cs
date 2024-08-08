@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Configuration;
-using System.Messaging;
 using System.Net;
 using System.Web.Mvc;
 using eShopLegacyMVC.Models;
@@ -67,28 +65,12 @@ namespace eShopLegacyMVC.Controllers
             if (ModelState.IsValid)
             {
                 service.CreateCatalogItem(catalogItem);
-                QueueItemCreatedMessage(catalogItem);
                 return RedirectToAction("Index");
             }
 
             ViewBag.CatalogBrandId = new SelectList(service.GetCatalogBrands(), "Id", "Brand", catalogItem.CatalogBrandId);
             ViewBag.CatalogTypeId = new SelectList(service.GetCatalogTypes(), "Id", "Type", catalogItem.CatalogTypeId);
             return View(catalogItem);
-        }
-
-        private void QueueItemCreatedMessage(CatalogItem catalogItem)
-        {
-            using (var queue = new MessageQueue(ConfigurationManager.AppSettings["NewItemQueuePath"]))
-            {
-                var message = new Message
-                {
-                    Formatter = new XmlMessageFormatter(new[] { typeof(CatalogItem) }),
-                    Body = catalogItem,
-                    Label = "New catalog item"
-                };
-
-                queue.Send(message);
-            }
         }
 
         // GET: Catalog/Edit/5
@@ -115,7 +97,7 @@ namespace eShopLegacyMVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Exclude = "PictureUri,CatalogType,CatalogBrand")] CatalogItem catalogItem)
+        public ActionResult Edit([Bind(Include = "Id,Name,Description,Price,PictureFileName,CatalogTypeId,CatalogBrandId,AvailableStock,RestockThreshold,MaxStockThreshold,OnReorder")] CatalogItem catalogItem)
         {
             _log.Info($"Now processing... /Catalog/Edit?id={catalogItem.Id}");
             if (ModelState.IsValid)
