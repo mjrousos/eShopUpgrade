@@ -3,6 +3,7 @@ using log4net;
 using System.IO;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 
 namespace eShopLegacyMVC.Controllers
 {
@@ -11,11 +12,12 @@ namespace eShopLegacyMVC.Controllers
         private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public const string GetPicRouteName = "GetPicRouteTemplate";
-
+        private readonly IWebHostEnvironment env;
         private ICatalogService service;
 
-        public PicController(ICatalogService service)
+        public PicController(IWebHostEnvironment env, ICatalogService service)
         {
+            this.env = env;
             this.service = service;
         }
 
@@ -35,8 +37,7 @@ namespace eShopLegacyMVC.Controllers
 
             if (item != null)
             {
-                var webRoot = Server.MapPath("~/Pics");
-                var path = Path.Combine(webRoot, item.PictureFileName);
+                var path = Path.Combine(env.ContentRootPath, "Pics", item.PictureFileName);
 
                 string imageFileExtension = Path.GetExtension(item.PictureFileName);
                 string mimetype = GetImageMimeTypeFromImageFileExtension(imageFileExtension);

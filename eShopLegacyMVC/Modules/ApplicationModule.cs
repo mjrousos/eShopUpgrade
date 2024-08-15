@@ -2,6 +2,7 @@
 using eShopLegacyMVC.Models;
 using eShopLegacyMVC.Models.Infrastructure;
 using eShopLegacyMVC.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace eShopLegacyMVC.Modules
 {
@@ -28,7 +29,7 @@ namespace eShopLegacyMVC.Modules
                     .InstancePerLifetimeScope();
             }
 
-            builder.RegisterType<CatalogDBContext>()
+            builder.Register<IConfiguration, CatalogDBContext>(c => new CatalogDBContext(c.GetConnectionString("CatalogDBContext")))
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<CatalogDBInitializer>()

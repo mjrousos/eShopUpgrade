@@ -2,7 +2,9 @@
 using Newtonsoft.Json;
 using System;
 using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace eShopLegacyMVC.Services
 {
@@ -11,15 +13,17 @@ namespace eShopLegacyMVC.Services
         const int DefaultZipCode = 98052;
         const string RequestFormatString = "http://api.weatherapi.com/v1/current.json?key={0}&q={1}&aqi=no";
         private readonly string _apiKey;
+        private readonly HttpClient _httpClient;
 
-        public WeatherService(string apiKey)
+        public WeatherService(string apiKey, HttpClient httpClient)
         {
             _apiKey = apiKey ?? Environment.GetEnvironmentVariable("WEATHER_API_KEY");
+            _httpClient = httpClient;
         }
 
-        public int? GetUserCurrentTemperature(ApplicationUser user, bool celsius)
+        public async Task<int?> GetUserCurrentTemperature(ApplicationUser user, bool celsius)
         {
-            var zipCode = user.ZipCode ?? DefaultZipCode;
+            var zipCode = (await user.GetZipCode(_httpClient)) ?? DefaultZipCode;
 
             return GetTemperature(zipCode, celsius);
         }
