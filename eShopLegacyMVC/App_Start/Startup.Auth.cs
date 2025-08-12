@@ -8,9 +8,19 @@ using eShopLegacyMVC.Models;
 
 namespace eShopLegacyMVC
 {
+    /// <summary>
+    /// Authentication configuration portion of the OWIN startup class.
+    /// Configures ASP.NET Identity with cookie-based authentication for the catalog management system.
+    /// </summary>
     public partial class Startup
     {
-        // For more information on configuring authentication, please visit https://go.microsoft.com/fwlink/?LinkId=301864
+        /// <summary>
+        /// Configures ASP.NET Identity authentication using cookie-based authentication.
+        /// Sets up per-request instances of DbContext and Identity managers, and establishes
+        /// cookie authentication with security stamp validation for enhanced security.
+        /// Reference: https://go.microsoft.com/fwlink/?LinkId=301864
+        /// </summary>
+        /// <param name="app">OWIN application builder for configuring authentication middleware</param>
         public void ConfigureAuth(IAppBuilder app)
         {
             // Configure the db context, user manager and signin manager to use a single instance per request
